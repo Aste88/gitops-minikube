@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  project: system
+  destination:
+    namespace: system
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: cert-manager
+    repoURL: 'https://github.com/Aste88/gitops-minikube.git'
+    targetRevision: master
+    helm:
+      valueFiles:
+        - values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Prune=true

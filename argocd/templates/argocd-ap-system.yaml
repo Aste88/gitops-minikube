@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: system
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: System tools
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  destinations:
+  - name: '*'
+    namespace: '*'
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - https://github.com/Aste88/gitops-minikube.git
+  - https://github.com/kubernetes-csi/external-snapshotter.git
+  - https://github.com/prometheus-community/helm-charts.git
+  - https://github.com/actions-runner-controller/actions-runner-controller.git

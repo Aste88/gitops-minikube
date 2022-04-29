@@ -1,0 +1,48 @@
+# Add Snapshot CRDs
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: snapshotter-client-crd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  project: system
+  destination:
+    namespace: kube-system
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: client/config/crd/
+    repoURL: 'https://github.com/kubernetes-csi/external-snapshotter.git'
+    targetRevision: v6.0.0-rc4
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Replace=true # Workaround as mentioned
+---
+# Common Snapshot Controller
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: snapshotter-client-controller
+  namespace: argocd
+spec:
+  project: system
+  destination:
+    namespace: kube-system
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: deploy/kubernetes/snapshot-controller/
+    repoURL: 'https://github.com/kubernetes-csi/external-snapshotter.git'
+    targetRevision: v6.0.0-rc4
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Prune=true

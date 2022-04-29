@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ceph
+  namespace: monitoring
+  labels:
+    k8s-app: ceph
+spec:
+  type: ExternalName
+  externalName: vrt.minikube.io
+  ports:
+  - name: metrics
+    port: 9283
+    protocol: TCP
+    targetPort: 9283
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: ceph
+  namespace: monitoring
+  labels:
+    k8s-app: ceph
+subsets:
+- addresses:
+  - ip: 10.0.20.51
+  - ip: 10.0.20.52
+  - ip: 10.0.20.53
+  - ip: 10.0.20.54
+  - ip: 10.0.20.55
+  ports:
+  - name: metrics
+    port: 9283
+    protocol: TCP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ceph
+  namespace: monitoring
+  labels:
+    k8s-app: ceph
+spec:
+  endpoints:
+  - port: metrics
+    interval: 15s
+    honorLabels: true
+    path: /metrics
+  selector:
+    matchLabels:
+      k8s-app: ceph
+  namespaceSelector:
+    matchNames:
+    - monitoring
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    release: kube-prometheus-stack
+  name: ceph-endpoint
+  namespace: monitoring
+spec:
+  groups:
+    - name: critical-external
+      rules:
+        - alert: PrometheusTargetMissing
+          expr: up {endpoint="metrics",  namespace="monitoring", service="ceph"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            message: "Prometheus target missing (instance {{ "{{" }} $labels.instance }})"
+            description: "A Prometheus target has disappeared. An exporter might be crashed.\n  VALUE = {{ "{{" }} $value }}\n  LABELS = {{ "{{" }} $labels }}"

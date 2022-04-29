@@ -1,0 +1,11 @@
+apiVersion: v2
+name: cert-manager
+type: application
+version: 1.1.1
+appVersion: 1.8.0
+sources:
+  - https://artifacthub.io/packages/helm/bitnami/cert-manager
+dependencies:
+  - name: cert-manager
+    version: 0.4.17
+    repository: https://charts.bitnami.com/bitnami

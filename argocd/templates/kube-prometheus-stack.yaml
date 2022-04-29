@@ -1,0 +1,52 @@
+## Separated in two part because https://github.com/prometheus-community/helm-charts/issues/1500
+## Fix from https://github.com/prometheus-operator/prometheus-operator/issues/4439#issuecomment-1030198014
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack-crd
+  namespace: argocd
+spec:
+  project: system
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: charts/kube-prometheus-stack/crds/
+    repoURL: 'https://github.com/prometheus-community/helm-charts.git'
+    targetRevision: kube-prometheus-stack-34.8.0
+    directory:
+      recurse: true
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+      - Replace=true # Workaround as mmenione
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: system
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: kube-prometheus-stack
+    repoURL: 'https://github.com/Aste88/gitops-minikube.git'
+    targetRevision: master
+    helm:
+      skipCrds: true
+      valueFiles:
+        - values.yaml
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Prune=true

@@ -1,0 +1,33 @@
+apiVersion: gemini.fairwinds.com/v1beta1
+kind: SnapshotGroup
+metadata:
+  name: gitea-config
+spec:
+  persistentVolumeClaim:
+    claimName: gitea-data
+  schedule:
+    - every: day
+      keep: 4
+    - every: week
+      keep: 2
+  template:
+    spec:
+      volumeSnapshotClassName: csi-rbd-snapclass
+---
+apiVersion: gemini.fairwinds.com/v1beta1
+kind: SnapshotGroup
+metadata:
+  name: gitea-postgres
+spec:
+  persistentVolumeClaim:
+    claimName: data-gitea-postgresql-0
+  schedule:
+    - every: day
+      keep: 4
+    - every: week
+      keep: 2
+  template:
+    spec:
+      volumeSnapshotClassName: csi-rbd-snapclass
+
+      

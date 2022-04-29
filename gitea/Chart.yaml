@@ -1,0 +1,11 @@
+apiVersion: v2
+name: gitea
+type: application
+version: 1.0.1
+appVersion: 1.16.5
+sources:
+  - https://artifacthub.io/packages/helm/aste88-helm-charts/gitea 
+dependencies:
+  - name: gitea
+    version: 1.0.2
+    repository: https://aste88.github.io/helm-charts/

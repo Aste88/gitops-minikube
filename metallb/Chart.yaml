@@ -1,0 +1,11 @@
+apiVersion: v2
+name: metallb
+type: application
+version: 1.1.0
+appVersion: 0.12.1
+sources:
+  - https://artifacthub.io/packages/helm/bitnami/metallb
+dependencies:
+  - name: metallb
+    version: 3.0.1
+    repository: https://charts.bitnami.com/bitnami
