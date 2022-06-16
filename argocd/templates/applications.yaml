@@ -1,26 +1,35 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metallb
+  name: applications
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: system
   destination:
-    namespace: system
+    namespace: argocd
     server: 'https://kubernetes.default.svc'
   source:
-    path: metallb
+    path: applications
     repoURL: 'https://github.com/Aste88/gitops-minikube.git'
     targetRevision: master
     helm:
+      skipCrds: true
       valueFiles:
         - values.yaml
+  ignoreDifferences:
+    - group: "*"
+      namespace: argocd
+      kind: Application
+      jsonPointers:
+        - /spec/syncPolicy/automated
   syncPolicy:
     automated:
-      prune: true
+      # prune: true
       selfHeal: true
     syncOptions:
       - PrunePropagationPolicy=foreground
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
+      # - ApplyOutOfSyncOnly=true
       - Prune=true

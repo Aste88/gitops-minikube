@@ -1,22 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: nginx-ingress-controller
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   project: system
   destination:
     namespace: system
-    server: 'https://kubernetes.default.svc'
+    server: {{ .Values.spec.destination.server }}
   source:
-    path: cert-manager
+    path: nginx-ingress-controller
     repoURL: 'https://github.com/Aste88/gitops-minikube.git'
     targetRevision: master
-    helm:
-      valueFiles:
-        - values.yaml
+    # helm:
+    #   valueFiles:
+    #     - values.yaml
+    plugin:
+      name: kustomized-helm
   syncPolicy:
     automated:
       prune: true

@@ -10,7 +10,7 @@ spec:
   project: system
   destination:
     namespace: kube-system
-    server: 'https://kubernetes.default.svc'
+    server: {{ .Values.spec.destination.server }}
   source:
     path: client/config/crd/
     repoURL: 'https://github.com/kubernetes-csi/external-snapshotter.git'
@@ -32,7 +32,7 @@ spec:
   project: system
   destination:
     namespace: kube-system
-    server: 'https://kubernetes.default.svc'
+    server: {{ .Values.spec.destination.server }}
   source:
     path: deploy/kubernetes/snapshot-controller/
     repoURL: 'https://github.com/kubernetes-csi/external-snapshotter.git'

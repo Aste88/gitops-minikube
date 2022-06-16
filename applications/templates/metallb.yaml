@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+spec:
+  project: system
+  destination:
+    namespace: system
+    server: {{ .Values.spec.destination.server }}
+  source:
+    path: metallb
+    repoURL: 'https://github.com/Aste88/gitops-minikube.git'
+    targetRevision: master
+    helm:
+      valueFiles:
+        - values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Prune=true

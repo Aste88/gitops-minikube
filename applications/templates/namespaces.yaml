@@ -6,7 +6,7 @@ metadata:
 spec:
   project: system
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: {{ .Values.spec.destination.server }}
   source:
     path: namespaces
     repoURL: 'https://github.com/Aste88/gitops-minikube.git'

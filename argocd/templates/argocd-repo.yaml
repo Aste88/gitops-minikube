@@ -7,23 +7,3 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   url: https://github.com/Aste88/gitops-minikube.git
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: csi-snapshotter-crd
-  namespace: argocd
-  labels:
-    argocd.argoproj.io/secret-type: repository
-stringData:
-  url: https://github.com/kubernetes-csi/external-snapshotter.git
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: prometheus-crd
-  namespace: argocd
-  labels:
-    argocd.argoproj.io/secret-type: repository
-stringData:
-  url: https://github.com/prometheus-community/helm-charts.git

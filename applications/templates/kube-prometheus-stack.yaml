@@ -9,7 +9,7 @@ spec:
   project: system
   destination:
     namespace: monitoring
-    server: 'https://kubernetes.default.svc'
+    server: {{ .Values.spec.destination.server }}
   source:
     path: charts/kube-prometheus-stack/crds/
     repoURL: 'https://github.com/prometheus-community/helm-charts.git'
@@ -32,7 +32,7 @@ spec:
   project: system
   destination:
     namespace: monitoring
-    server: 'https://kubernetes.default.svc'
+    server: {{ .Values.spec.destination.server }}
   source:
     path: kube-prometheus-stack
     repoURL: 'https://github.com/Aste88/gitops-minikube.git'
